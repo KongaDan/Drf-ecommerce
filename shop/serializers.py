@@ -13,7 +13,7 @@ class ArticleSerializer(ModelSerializer):
 Pour cela, nous pouvons redéfinir notre attribut de classe products 
 avec un SerializerMethodField  qui nous donne alors la possibilité de filtrer les produits à retourner.
 """
-class ProductSerializer(ModelSerializer):
+class ProductDetailSerializer(ModelSerializer):
 
     articles = serializers.SerializerMethodField()
 
@@ -25,8 +25,20 @@ class ProductSerializer(ModelSerializer):
         queryset = instance.articles.filter(active = True)
         serializer = ArticleSerializer(queryset, many=True)
         return serializer.data
+    
+class ProductListSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Product
+        fields = ['id','date_created','date_updated','name']
+        
+class CategoryListSerializer(ModelSerializer):
+    
+    class Meta:
+        model = Category
+        fields = ['id','date_created','date_updated','name']
 
-class CategoySerializer(ModelSerializer):
+class CategoryDetailSerializer(ModelSerializer):
     
     #products = ProductSerializer(many= True)
     products= serializers.SerializerMethodField()

@@ -8,7 +8,7 @@ class CategoryAPIView(APIView):
 
     def get(self, *args, **kwargs):
         categories = Category.objects.all()
-        serializer = CategoySerializer(categories, many=True)
+        serializer = CategoryListSerializer(categories, many=True)
         return Response(serializer.data)
 
     """
@@ -22,19 +22,25 @@ class ProductAPIview(APIView):
 
     def get(self, *args, **kwargs):
         products = Product.objects.all()
-        serializer = ProductSerializer(products,many=True)
+        serializer = ProductListSerializer(products,many=True)
         return Response(serializer.data)
     
 class CategoryViewset(ReadOnlyModelViewSet):
-    serializer_class=CategoySerializer
-   # queryset= Category.objects.all()
+    serializer_class=CategoryListSerializer
+    detail_serializer_class = CategoryDetailSerializer
 
     def get_queryset(self):
        return Category.objects.filter(active = True)
     
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return self.detail_serializer_class
+        return super().get_serializer_class()
+    
 class ProductViewset(ReadOnlyModelViewSet):
-    serializer_class= ProductSerializer
+    serializer_class= ProductListSerializer
     #queryset= Product.objects.filter(active=True)
+    detail_serializer_class = ProductDetailSerializer
 
     def get_queryset(self):
         queryset= Product.objects.filter(active=True)
@@ -42,6 +48,11 @@ class ProductViewset(ReadOnlyModelViewSet):
         if category_id is not None:
             queryset = queryset.filter(category_id= category_id)
         return queryset
+    
+    def get_serializer_class(self):
+        if self.action =='retrieve':
+            return self.detail_serializer_class
+        return super().get_serializer_class()
     
 class ArticleViewset(ReadOnlyModelViewSet):
     serializer_class = ArticleSerializer
