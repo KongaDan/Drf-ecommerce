@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.viewsets import ReadOnlyModelViewSet
+from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.response import Response
 from .models import Category, Product
 from .serializers import *
@@ -88,4 +88,14 @@ class ArticleViewset(ReadOnlyModelViewSet):
         return queryset
     
     
-   
+class AdminCategoryViewset(MultipleSerializerMixin, ModelViewSet):
+    serializer_class = CategoryListSerializer
+    detail_serializer_class = CategoryDetailSerializer
+
+    def get_queryset(self):
+        return Category.objects.all()
+    
+class AdminArticleViewset(MultipleSerializerMixin, ModelViewSet):
+    serializer_class = ArticleSerializer
+    def get_queryset(self):
+        return Article.obejcts.all()
