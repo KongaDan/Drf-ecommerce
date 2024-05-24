@@ -42,7 +42,7 @@ class ProductListSerializer(ModelSerializer):
     
     class Meta:
         model = Product
-        fields = ['id','date_created','date_updated','name']
+        fields = ['id','date_created','date_updated','name','category','ecoscore']
         
 class CategoryListSerializer(ModelSerializer):
     
